@@ -5,17 +5,23 @@ import MaskedInput from "react-text-mask";
 import "./App.css";
 import { Button, Input } from "antd";
 import { AnotherComponent } from "./AnotherComponent";
+import Axios from "axios";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       number: 0,
+      dataUsers: [],
       numberMultiply: 0,
       numberMultiply1: 0,
       numberMultiply2: 0
     };
   }
+
+  // componentDidMount() {
+  //   this.handleFetchUsers();
+  // }
 
   handleIncrementNumber = () => {
     this.setState({
@@ -40,14 +46,29 @@ class App extends React.Component {
     this.setState({ numberMultiply: e.target.value });
   };
 
+  handleFetchUsers = () => {
+    Axios.get("https://5d60ae24c2ca490014b27087.mockapi.io/api/v1/users").then(
+      ({ data }) => {
+        // const {data} = dataUser
+        // console.log("data", data);
+        // console.log()
+        this.setState({ dataUsers: data });
+        // alert('Berhasil')
+        console.log('this.state', this.state.dataUsers)
+      }
+    );
+  };
+
   render() {
-    const { number: mb, numberMultiply } = this.state;
+    const { number: mb, numberMultiply, dataUsers } = this.state;
     return (
-      <div className="App"  style={{backgroundColor: 'blue'}}>
+      <div className="App" style={{ backgroundColor: "blue" }}>
         <AnotherComponent
-         {...this.state}
+          {...this.state}
           handleIncrementNumber={this.handleIncrementNumber}
           handleDecrementNumber={this.handleDecrementNumber}
+          handleFetchUsers={this.handleFetchUsers}
+          users={dataUsers}
         />
         <Button
           onClick={this.handleMultiplyNumber}
@@ -67,10 +88,7 @@ class App extends React.Component {
           type="number"
           value={this.state.numberMultiply}
           onChange={this.handleChange}
-        />
-
-        <br />
-        {/* {mb} */}
+        />name
       </div>
     );
   }
